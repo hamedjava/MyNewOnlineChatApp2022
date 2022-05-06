@@ -9,7 +9,7 @@ android {
     defaultConfig {
         applicationId "com.example.newonlinechatapp2022"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 30
         versionCode 1
         versionName "1.0"
 
@@ -68,7 +68,4 @@ dependencies {
     implementation 'com.hbb20:ccp:2.5.1'
     implementation 'androidx.activity:activity:1.4.0'
     implementation 'androidx.fragment:fragment:1.4.1'
-
-
-
 }
