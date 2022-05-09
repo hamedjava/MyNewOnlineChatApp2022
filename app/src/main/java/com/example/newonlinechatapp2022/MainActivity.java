@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -25,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
-
+    private static final String TAG  = "log";
     EditText edt_getCountryCode;
     CountryCodePicker countryCodePicker;
     Button btn_verify;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        
 
         countryCodePicker = (CountryCodePicker)findViewById(R.id.countryCodePicker);
         btn_verify = (Button)findViewById(R.id.btn_main_verify);
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 String number = edt_getCountryCode.getText().toString();
                 if(number.isEmpty()){
                     Toast.makeText(MainActivity.this, "Please Enter Your Number", Toast.LENGTH_SHORT).show();
-                }else if(number.length() <= 10){
+                }else if(number.length() < 10){
                     Toast.makeText(MainActivity.this, "Please Enter Correct Number", Toast.LENGTH_SHORT).show();
                 }else{
 
@@ -100,11 +101,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onVerificationCompleted(@NonNull @NotNull PhoneAuthCredential phoneAuthCredential) {
                 //how to automatically fetch code here
+                Toast.makeText(MainActivity.this, "Verification Completed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onVerificationFailed(@NonNull @NotNull FirebaseException e) {
-
+                Log.e(TAG, "onVerificationFailed:>>>>>>>>>>> ", e);
+                Toast.makeText(MainActivity.this, "Verification Failed", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -113,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "OTB Code Is Send", Toast.LENGTH_SHORT).show();
                 progressBar.setVisibility(View.INVISIBLE);
                 codeSend=s;
+                Toast.makeText(MainActivity.this, codeSend+"", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this,OTBAuthenticationActivity.class);
                 intent.putExtra("otb",codeSend);
                 startActivity(intent);
