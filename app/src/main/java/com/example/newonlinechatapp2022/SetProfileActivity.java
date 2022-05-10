@@ -46,7 +46,6 @@ public class SetProfileActivity extends AppCompatActivity {
     ProgressBar setProfile_progressBar;
 
 
-
     private FirebaseAuth firebaseAuth;
     private FirebaseStorage firebaseStorage;
     private StorageReference storageReference;
@@ -164,9 +163,6 @@ public class SetProfileActivity extends AppCompatActivity {
                 Toast.makeText(SetProfileActivity.this, "Image Not Upload", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
 
     }
 
