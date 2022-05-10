@@ -197,6 +197,7 @@ public class SetProfileActivity extends AppCompatActivity {
         }else{
             Toast.makeText(this, "Please Select An Image", Toast.LENGTH_SHORT).show();
         }
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 }
