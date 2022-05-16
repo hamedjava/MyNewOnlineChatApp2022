@@ -119,10 +119,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, codeSend+"", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(MainActivity.this,OTBAuthenticationActivity.class);
                 intent.putExtra("otb",codeSend);
+                //intent.putExtra("token",forceResendingToken);
+                Log.d(TAG, "TOKEN>>>>>>>>>>>>>" + forceResendingToken);
                 startActivity(intent);
             }
         };
-
 
 
     }
