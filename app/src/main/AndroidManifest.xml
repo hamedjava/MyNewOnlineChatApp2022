@@ -3,7 +3,8 @@
     package="com.example.newonlinechatapp2022">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission-sdk-23 android:name="android.permission.INTERNET"/>
+
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -12,7 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NewOnlineChatApp2022">
-        <activity android:name=".ChatActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".SettingActivity" />
+        <activity android:name=".ChatActivity" />
         <activity android:name=".SetProfileActivity" />
         <activity android:name=".OTBAuthenticationActivity" />
         <activity android:name=".SplashActivity">

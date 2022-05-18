@@ -1,16 +1,25 @@
 package com.example.newonlinechatapp2022;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.newonlinechatapp2022.PagerAdapter.ViewPagerAdapter;
 import com.google.android.material.tabs.TabItem;
 import com.google.android.material.tabs.TabLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 public class ChatActivity extends AppCompatActivity {
 
@@ -27,7 +36,8 @@ public class ChatActivity extends AppCompatActivity {
         toolbar = (Toolbar)findViewById(R.id.chat_toolbar);
         setSupportActionBar(toolbar);
 
-
+        Drawable drawable = ContextCompat.getDrawable(getApplicationContext(),R.drawable.ic_baseline_more_vert_24);
+        toolbar.setOverflowIcon(drawable);
 
         tabLayout = findViewById(R.id.tabLayout);
         tabStatus = (TabItem)findViewById(R.id.tabStatus);
@@ -62,5 +72,27 @@ public class ChatActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
 
+
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.profile_menu:
+                Intent intent = new Intent(ChatActivity.this,ProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.setting_menu:
+                Toast.makeText(this, "Setting Is Clicked...", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(@NonNull @NotNull Menu menu) {
+        getMenuInflater().inflate(R.menu.menu,menu);
+        return true;
     }
 }
