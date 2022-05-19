@@ -65,7 +65,7 @@ public class SetProfileActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
 
         edt_getUsername = (EditText)findViewById(R.id.edt_getUsername);
-        img_getUserImage = (ImageView)findViewById(R.id.img_profile_logo);
+        img_getUserImage = (ImageView)findViewById(R.id.user_logo_ProfileActivity);
         cv_getUserImage = (CardView)findViewById(R.id.cv_getUserImage);
         setProfile_progressBar = (ProgressBar)findViewById(R.id.saveProfileProgressBar);
         btn_saveProfile = (Button)findViewById(R.id.btn_saveProfile);
