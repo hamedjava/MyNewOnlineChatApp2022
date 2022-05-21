@@ -79,7 +79,7 @@ public class ChatFragment extends Fragment {
                 });
 
 
-                
+
             }
 
             @NonNull
