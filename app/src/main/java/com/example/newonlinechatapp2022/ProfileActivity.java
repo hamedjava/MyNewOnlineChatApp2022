@@ -93,6 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProfileActivity.this,UpdateProfileActivity.class);
+                intent.putExtra("nameofuser",tv_showUsername.getText().toString());
                 startActivity(intent);
             }
         });
