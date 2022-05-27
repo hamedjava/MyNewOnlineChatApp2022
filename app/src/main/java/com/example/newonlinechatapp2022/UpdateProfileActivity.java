@@ -86,6 +86,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
         });
 
 
+        edt_UpdateUsername.setText(intent.getExtras().getString("nameofuser"));
+
         databaseReference = firebaseDatabase.getReference(firebaseAuth.getUid());
 
 
