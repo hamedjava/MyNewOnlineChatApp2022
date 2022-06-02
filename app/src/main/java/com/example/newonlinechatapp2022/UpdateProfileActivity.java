@@ -239,4 +239,39 @@ public class UpdateProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status","Offline").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(UpdateProfileActivity.this, "Now User Is Offline", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(UpdateProfileActivity.this, "Not Update Profile In Profile Activity", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status","Online").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(UpdateProfileActivity.this, "Now User Is Online", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(UpdateProfileActivity.this, "Can't Show Status Of User", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 }

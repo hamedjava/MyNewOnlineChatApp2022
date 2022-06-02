@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.auth.User;
 import com.google.firebase.storage.FirebaseStorage;
@@ -107,5 +109,40 @@ public class ProfileActivity extends AppCompatActivity {
         img_showUserLogo = findViewById(R.id.img_showProfileUser_logo);
         toolbar = (Toolbar) findViewById(R.id.profile_toolbar);
         btn_profile_back = (ImageButton) findViewById(R.id.btn_back_viewProfile);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status","Offline").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(ProfileActivity.this, "Now User Is Offline", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Not Update Profile In Profile Activity", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        DocumentReference documentReference = firebaseFirestore.collection("Users").document(firebaseAuth.getUid());
+        documentReference.update("status","Online").addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void unused) {
+                Toast.makeText(ProfileActivity.this, "Now User Is Online", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull @NotNull Exception e) {
+                Toast.makeText(ProfileActivity.this, "Can't Show Status Of User", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }
