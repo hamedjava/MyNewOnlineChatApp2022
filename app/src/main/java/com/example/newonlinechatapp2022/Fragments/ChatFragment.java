@@ -1,5 +1,6 @@
 package com.example.newonlinechatapp2022.Fragments;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.newonlinechatapp2022.FirebaseModel.FirebaseModel;
 import com.example.newonlinechatapp2022.R;
+import com.example.newonlinechatapp2022.SpecificChatActivity;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +37,7 @@ public class ChatFragment extends Fragment {
     ImageView img_cardViewOfUser;
     FirestoreRecyclerAdapter<FirebaseModel,NoteViewHolder> chatAdapter;
     RecyclerView rv_chat_list;
-
+    private FirebaseModel firebaseModel;
 
     @Nullable
     @org.jetbrains.annotations.Nullable
@@ -47,7 +49,8 @@ public class ChatFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         rv_chat_list = view.findViewById(R.id.rv_chat_list);
 
-        Query query = firebaseFirestore.collection("Users");
+        //Query query = firebaseFirestore.collection("Users");
+        Query query = firebaseFirestore.collection("Users").whereNotEqualTo("uid",firebaseAuth.getUid());
         FirestoreRecyclerOptions<FirebaseModel> allUsername = new FirestoreRecyclerOptions
                 .Builder<FirebaseModel>()
                 .setQuery(query,FirebaseModel.class)
@@ -60,7 +63,6 @@ public class ChatFragment extends Fragment {
                 holder.particularUsername.setText(model.getName());
                 holder.userStatus.setText(model.getStatus());
                 String uri = model.getImage();
-
                 Picasso.get().load(uri).into(img_cardViewOfUser);
 
                 if(model.getStatus().equals("Online")){
@@ -74,7 +76,11 @@ public class ChatFragment extends Fragment {
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getActivity(), "Item Is Clicked..", Toast.LENGTH_SHORT).show();
+                        Intent intent  = new Intent(getActivity(), SpecificChatActivity.class);
+                        intent.putExtra("name",model.getName());
+                        intent.putExtra("receiveruid",model.getUid());
+                        intent.putExtra("imageuri",model.getImage());
+                        startActivity(intent);
                     }
                 });
 
