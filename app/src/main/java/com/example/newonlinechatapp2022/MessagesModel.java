@@ -1,20 +1,20 @@
 package com.example.newonlinechatapp2022;
 
-public class Messages {
+public class MessagesModel {
 
     private String message;
     private String senderID;
     private long timeStamp;
     private String currentTime;
 
-    public Messages(String message, String senderID, long timeStamp, String currentTime) {
+    public MessagesModel(String message, String senderID, long timeStamp, String currentTime) {
         this.message = message;
         this.senderID = senderID;
         this.timeStamp = timeStamp;
         this.currentTime = currentTime;
     }
 
-    public Messages() {
+    public MessagesModel() {
     }
 
     public String getMessage() {
