@@ -10,7 +10,7 @@
 
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/profile_appbarLayout"
+        android:id="@+id/specific_appbarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -62,7 +62,7 @@
         app:cardCornerRadius="130dp"
         android:layout_marginTop="44dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/profile_appbarLayout">
+        android:layout_below="@id/specific_appbarLayout">
 
         <ImageView
             android:id="@+id/img_showProfileUser_logo"
