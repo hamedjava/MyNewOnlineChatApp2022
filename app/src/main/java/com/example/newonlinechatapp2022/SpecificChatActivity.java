@@ -1,5 +1,6 @@
 package com.example.newonlinechatapp2022;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -14,11 +15,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class SpecificChatActivity extends AppCompatActivity {
@@ -36,6 +45,7 @@ public class SpecificChatActivity extends AppCompatActivity {
 
     private String receivedMessage
             ,senderName
+            ,receiverName
             ,receiverUID
             ,senderUID;
 
@@ -43,7 +53,7 @@ public class SpecificChatActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     FirebaseDatabase firebaseDatabase;
 
-    String senderRoom,ReceiverRoom;
+    String senderRoom,receiverRoom;
     RecyclerView rv_messagesList;
 
     String currentTime;
@@ -60,11 +70,74 @@ public class SpecificChatActivity extends AppCompatActivity {
 
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
-        
+
+        senderUID = firebaseAuth.getUid();
+        receiverUID = getIntent().getStringExtra("receiveruid");
+        receiverName = getIntent().getStringExtra("name");
+
+        senderRoom = senderUID + receiverUID;
+        receiverRoom = receiverUID + senderUID;
 
 
+        tv_specific_nameOfUser.setText(receiverName);
+
+        String uri = intent.getStringExtra("imageuri");
+
+        if(uri.isEmpty()){
+            Toast.makeText(this, "Null Is Received", Toast.LENGTH_SHORT).show();
+        }else{
+            Picasso.get().load(uri).into(img_userImageViewOnToolbar);
+        }
 
 
+        btn_send_message.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                enteredMessage = edt_specific_sendMessage.getText().toString();
+
+                if(enteredMessage.isEmpty()){
+                    Toast.makeText(SpecificChatActivity.this, "Nothing To Send", Toast.LENGTH_SHORT).show();
+                }else{
+
+                    Date date = new Date();
+                    currentTime = simpleDateFormat.format(calendar.getTime());
+                    MessagesModel messagesModel = new MessagesModel(enteredMessage,firebaseAuth.getUid(),date.getTime(),currentTime);
+                    firebaseDatabase = FirebaseDatabase.getInstance();
+                    firebaseDatabase.getReference().child("chats")
+                            .child(senderRoom)
+                            .child("messages")
+                            .push()
+                            .setValue(messagesModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull @NotNull Task<Void> task) {
+                            firebaseDatabase.getReference()
+                                    .child("chats")
+                                    .child(receiverRoom)
+                                    .child("messages")
+                                    .push()
+                                    .setValue(messagesModel).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull @NotNull Task<Void> task) {
+
+                                }
+                            });
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull @NotNull Exception e) {
+                            Toast.makeText(SpecificChatActivity.this, "Message Can Not Send", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    edt_specific_sendMessage.setText(null);
+
+
+                }
+
+            }
+        });
 
 
 
@@ -97,9 +170,6 @@ public class SpecificChatActivity extends AppCompatActivity {
         btn_specific_back = (ImageButton)findViewById(R.id.btn_back_specificChat);
         tv_specific_nameOfUser = (TextView) findViewById(R.id.tv_specific_nameOfUser);
         intent = getIntent();
-
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDatabase = FirebaseDatabase.getInstance();
 
     }
 }
