@@ -43,7 +43,18 @@ public class MessagesAdapter extends RecyclerView.Adapter{
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
+        MessagesModel messagesModel = messagesModelArrayList.get(position);
 
+
+        if(holder.getClass() == SenderViewHolder.class){
+            SenderViewHolder senderViewHolder = (SenderViewHolder)holder;
+            senderViewHolder.timeOfMessage.setText(messagesModel.getCurrentTime());
+            senderViewHolder.textViewMessage.setText(messagesModel.getMessage());
+        }else{
+            ReceiverViewHolder receiverViewHolder = (ReceiverViewHolder)holder;
+            receiverViewHolder.timeOfMessage.setText(messagesModel.getCurrentTime());
+            receiverViewHolder.textViewMessage.setText(messagesModel.getMessage());
+        }
     }
 
     @Override
