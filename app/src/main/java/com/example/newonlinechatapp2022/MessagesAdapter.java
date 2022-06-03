@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 
-public class MessagesAdapter extends RecyclerView.Adapter{
+public class MessagesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     Context context;
     ArrayList<MessagesModel> messagesModelArrayList;
 
-    private static final int ITEM_SEND = 1;
-    private static final int ITEM_RECEIVE = 2;
+    int ITEM_SEND = 1;
+    int ITEM_RECEIVE = 2;
 
     public MessagesAdapter(Context context,ArrayList<MessagesModel>messagesModelArrayList){
         this.context = context;
@@ -73,6 +73,7 @@ public class MessagesAdapter extends RecyclerView.Adapter{
         }
 
     }
+
 
     class SenderViewHolder extends RecyclerView.ViewHolder{
 

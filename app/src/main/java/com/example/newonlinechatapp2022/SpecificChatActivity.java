@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -20,12 +21,17 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -61,19 +67,58 @@ public class SpecificChatActivity extends AppCompatActivity {
     SimpleDateFormat simpleDateFormat;
 
 
+    MessagesAdapter adapter;
+    ArrayList<MessagesModel> messagesModelArrayList;
+    LinearLayoutManager linearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_specific_chat);
         setupViews();
+
+        linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        rv_messagesList.setLayoutManager(linearLayoutManager);
+        adapter = new MessagesAdapter(SpecificChatActivity.this,messagesModelArrayList);
+        rv_messagesList.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
+
         setSupportActionBar(toolbar);
+
 
         calendar = Calendar.getInstance();
         simpleDateFormat = new SimpleDateFormat("hh:mm a");
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+
+        DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(senderRoom).child("message");
+        adapter = new MessagesAdapter(SpecificChatActivity.this,messagesModelArrayList);
+
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                messagesModelArrayList.clear();
+                for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                    MessagesModel model = dataSnapshot.getValue(MessagesModel.class);
+                    messagesModelArrayList.add(model);
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+                Toast.makeText(SpecificChatActivity.this, "Chat Is Canceled", Toast.LENGTH_SHORT).show();
+            }
+        });
+
 
         senderUID = firebaseAuth.getUid();
         receiverUID = getIntent().getStringExtra("receiveruid");
         receiverName = getIntent().getStringExtra("name");
+
+
 
         senderRoom = senderUID + receiverUID;
         receiverRoom = receiverUID + senderUID;
@@ -103,7 +148,6 @@ public class SpecificChatActivity extends AppCompatActivity {
                     Date date = new Date();
                     currentTime = simpleDateFormat.format(calendar.getTime());
                     MessagesModel messagesModel = new MessagesModel(enteredMessage,firebaseAuth.getUid(),date.getTime(),currentTime);
-                    firebaseDatabase = FirebaseDatabase.getInstance();
                     firebaseDatabase.getReference().child("chats")
                             .child(senderRoom)
                             .child("messages")
@@ -141,13 +185,6 @@ public class SpecificChatActivity extends AppCompatActivity {
 
 
 
-
-
-
-
-
-
-
         btn_specific_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,7 +206,24 @@ public class SpecificChatActivity extends AppCompatActivity {
         img_userImageViewOnToolbar = (ImageView)findViewById(R.id.img_specificUserLogo);
         btn_specific_back = (ImageButton)findViewById(R.id.btn_back_specificChat);
         tv_specific_nameOfUser = (TextView) findViewById(R.id.tv_specific_nameOfUser);
+        rv_messagesList = (RecyclerView) findViewById(R.id.rv_specificChat);
+        messagesModelArrayList = new ArrayList<>();
         intent = getIntent();
 
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if(adapter!=null){
+            adapter.notifyDataSetChanged();
+        }
+    }
+
 }
