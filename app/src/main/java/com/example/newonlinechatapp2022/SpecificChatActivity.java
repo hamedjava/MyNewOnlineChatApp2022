@@ -93,6 +93,16 @@ public class SpecificChatActivity extends AppCompatActivity {
         firebaseDatabase = FirebaseDatabase.getInstance();
 
 
+        senderUID = firebaseAuth.getUid();
+        receiverUID = getIntent().getStringExtra("receiveruid");
+        receiverName = getIntent().getStringExtra("name");
+
+
+
+        senderRoom = senderUID + receiverUID;
+        receiverRoom = receiverUID + senderUID;
+
+
         DatabaseReference databaseReference = firebaseDatabase.getReference().child("chats").child(senderRoom).child("message");
         adapter = new MessagesAdapter(SpecificChatActivity.this,messagesModelArrayList);
 
@@ -114,14 +124,7 @@ public class SpecificChatActivity extends AppCompatActivity {
         });
 
 
-        senderUID = firebaseAuth.getUid();
-        receiverUID = getIntent().getStringExtra("receiveruid");
-        receiverName = getIntent().getStringExtra("name");
-
-
-
-        senderRoom = senderUID + receiverUID;
-        receiverRoom = receiverUID + senderUID;
+        /**/
 
 
         tv_specific_nameOfUser.setText(receiverName);
