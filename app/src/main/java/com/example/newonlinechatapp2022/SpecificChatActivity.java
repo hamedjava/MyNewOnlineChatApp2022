@@ -20,8 +20,6 @@ public class SpecificChatActivity extends AppCompatActivity {
     ImageView img_userImageViewOnToolbar;
     TextView tv_specific_username;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
